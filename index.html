@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SPYnet • Resumen Febrero 2026</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root{
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --line:rgba(15,23,42,.10);
+      --blue:#1e88e5;
+      --amber:#f9a825;
+      --purple:#6a1b9a;
+      --green:#43a047;
+      --red:#e53935;
+      --teal:#00897b;
+      --shadow:0 10px 25px rgba(0,0,0,.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Segoe UI,system-ui,Arial,sans-serif}
+    body{background:var(--bg);color:var(--text);padding:24px}
+    .wrap{max-width:1180px;margin:0 auto}
+    header{display:flex;gap:14px;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
+    .title h1{font-size:30px;font-weight:800;letter-spacing:.2px}
+    .title p{margin-top:6px;color:var(--muted);max-width:760px;line-height:1.45}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{border:1px solid var(--line);background:var(--card);padding:10px 12px;border-radius:12px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.06);font-weight:600;transition:.2s ease}
+    .btn:hover{transform:translateY(-1px)}
+    .tag{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(30,136,229,.10);color:var(--blue);font-weight:700;font-size:12px;border:1px solid rgba(30,136,229,.18);margin-top:10px}
+
+    .cards{display:grid;grid-template-columns:repeat(6,minmax(150px,1fr));gap:16px;margin:18px 0}
+    .card{background:var(--card);border-radius:var(--radius);padding:18px 18px 16px;box-shadow:var(--shadow);border:1px solid var(--line);min-height:110px;display:flex;flex-direction:column;justify-content:center}
+    .card .lbl{color:var(--muted);font-weight:700;font-size:13px}
+    .card .val{margin-top:10px;font-size:22px;font-weight:900;letter-spacing:.2px}
+    .card.ing{border-top:4px solid var(--blue)}
+    .card.egr{border-top:4px solid var(--amber)}
+    .card.comb{border-top:4px solid var(--red)}
+    .card.sap{border-top:4px solid var(--green)}
+    .card.cie{border-top:4px solid var(--purple)}
+    .card.sal{border-top:4px solid var(--teal)}
+    .card.ing .val{color:var(--blue)}
+    .card.egr .val{color:var(--amber)}
+    .card.comb .val{color:var(--red)}
+    .card.sap .val{color:var(--green)}
+    .card.cie .val{color:var(--purple)}
+    .card.sal .val{color:var(--teal)}
+
+    .grid-2{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin:18px 0}
+    .grid-2.equal{grid-template-columns:1fr 1fr}
+    .panel{background:var(--card);border-radius:22px;box-shadow:var(--shadow);border:1px solid var(--line);padding:16px}
+    .panel h2{font-size:16px;font-weight:900;margin-bottom:14px}
+    .panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+    .sum{font-size:13px;color:var(--muted);font-weight:800;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:#fff}
+    .chart-box{position:relative;height:280px;max-width:720px;margin:10px auto}
+    .chart-box.small{height:250px;max-width:520px}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px 10px;border-bottom:1px solid var(--line);font-size:14px}
+    th{color:var(--muted);text-align:left;font-size:12px;letter-spacing:.3px;text-transform:uppercase}
+    td:last-child,th:last-child{text-align:right}
+    .note{color:var(--muted);font-size:12px;line-height:1.45;margin-top:10px}
+    .footer{margin-top:16px;background:var(--card);border:1px dashed rgba(15,23,42,.18);border-radius:18px;padding:14px 16px;color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+
+    @media (max-width: 980px){
+      .cards{grid-template-columns:1fr 1fr}
+      .grid-2,.grid-2.equal{grid-template-columns:1fr}
+      header{flex-direction:column}
+      .actions{width:100%}
+    }
+
+    @media print{
+      body{background:#fff;padding:0}
+      .btn{display:none}
+      .panel,.card{box-shadow:none}
+      .wrap{max-width:100%;padding:16px}
+      .chart-box{height:240px}
+      .chart-box.small{height:220px}
+      .panel,.card,table,tr,td,th{break-inside:avoid;page-break-inside:avoid}
+      h1,h2{break-after:avoid;page-break-after:avoid}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="title">
+        <h1>SPYnet • Resumen Febrero 2026</h1>
+        <p>Reporte mensual armado con base en la planilla.</p>
+        <span class="tag">Febrero 2026</span>
+      </div>
+      <div class="actions">
+        <button class="btn" onclick="window.print()">Imprimir / Guardar PDF</button>
+        <button class="btn" id="btnCopiar">Copiar resumen</button>
+      </div>
+    </header>
+
+    <section class="cards">
+      <div class="card ing"><div class="lbl">Ingresos</div><div class="val" id="tIngresos">Gs. 0</div></div>
+      <div class="card egr"><div class="lbl">Egresos</div><div class="val" id="tEgresos">Gs. 0</div></div>
+      <div class="card comb"><div class="lbl">Combustible</div><div class="val" id="tCombustible">Gs. 0</div></div>
+      <div class="card sap"><div class="lbl">Sapucai</div><div class="val" id="tSapucai">Gs. 0</div></div>
+      <div class="card cie"><div class="lbl">Cierre acumulado</div><div class="val" id="tCierre">Gs. 0</div></div>
+      <div class="card sal"><div class="lbl">Saldo operativo</div><div class="val" id="tSaldo">Gs. 0</div></div>
+    </section>
+
+    <section class="grid-2">
+      <div class="panel">
+        <h2>Resumen General</h2>
+        <div class="chart-box"><canvas id="chartResumen"></canvas></div>
+      </div>
+      <div class="panel">
+        <h2>Distribución del mes</h2>
+        <div class="chart-box small"><canvas id="chartDistribucion"></canvas></div>
+      </div>
+    </section>
+
+    <section class="grid-2 equal">
+      <div class="panel">
+        <div class="panel-head">
+          <h2 style="margin-bottom:0">Totales consolidados</h2>
+          <span class="sum">Vista rápida</span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Concepto</th><th>Monto</th></tr>
+          </thead>
+          <tbody id="tbResumen"></tbody>
+        </table>
+        <div class="note">Totales cargados a partir del consolidado final visible en la planilla. El combustible se separa como referencia adicional.</div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2 style="margin-bottom:0">Movimiento de Sapucai</h2>
+          <span class="sum" id="sumSap">Total: Gs. 0</span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Fecha</th><th>Detalle</th><th>Monto</th></tr>
+          </thead>
+          <tbody id="tbSapucai"></tbody>
+        </table>
+        <div class="note">Se organizó una línea de movimientos destacados según los depósitos/traslados visibles en la hoja.</div>
+      </div>
+    </section>
+
+    <section class="grid-2 equal">
+      <div class="panel">
+        <div class="panel-head">
+          <h2 style="margin-bottom:0">Cierres por fecha</h2>
+          <span class="sum" id="sumCie">Total: Gs. 0</span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Fecha</th><th>Detalle</th><th>Monto</th></tr>
+          </thead>
+          <tbody id="tbCierres"></tbody>
+        </table>
+      </div>
+
+      <div class="panel">
+        <h2>Cierres</h2>
+        <div class="chart-box"><canvas id="chartCierres"></canvas></div>
+      </div>
+    </section>
+
+    <section class="grid-2 equal">
+      <div class="panel">
+        <div class="panel-head">
+          <h2 style="margin-bottom:0">Combustible por fecha</h2>
+          <span class="sum" id="sumComb">Total: Gs. 0</span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Fecha</th><th>Detalle</th><th>Monto</th></tr>
+          </thead>
+          <tbody id="tbCombustible"></tbody>
+        </table>
+      </div>
+
+      <div class="panel">
+        <h2>Combustible</h2>
+        <div class="chart-box"><canvas id="chartCombustible"></canvas></div>
+      </div>
+    </section>
+
+    <div class="footer">
+      <div id="marcaTiempo"></div>
+    </div>
+  </div>
+
+  <script>
+    const datos = {
+      periodo: 'Febrero 2026',
+      ingresos: 27728000,
+      egresos: 14467975,
+      combustible: 950000,
+      sapucai: 9800000,
+      cierre: 3885000,
+      sapucaiMovimientos: [
+        { fecha:'02/02/2026', detalle:'Efectivizado / trasladado a Sapucai', monto:300000 },
+        { fecha:'04/02/2026', detalle:'Depositado en Sapucai', monto:1400000 },
+        { fecha:'06/02/2026', detalle:'Se llevó a Sapucai', monto:900000 },
+        { fecha:'07/02/2026', detalle:'Depositado en Sapucai', monto:800000 },
+        { fecha:'09/02/2026', detalle:'Se llevó a Sapucai', monto:600000 },
+        { fecha:'12/02/2026', detalle:'Depositado en Sapucai', monto:2400000 },
+        { fecha:'13/02/2026', detalle:'Depositado en Sapucai', monto:400000 },
+        { fecha:'16/02/2026', detalle:'Depositado en Sapucai', monto:800000 },
+        { fecha:'18/02/2026', detalle:'Depositado en Sapucai', monto:400000 },
+        { fecha:'20/02/2026', detalle:'Depositado en Sapucai', monto:500000 },
+        { fecha:'23/02/2026', detalle:'Depositado en Sapucai', monto:700000 },
+        { fecha:'27/02/2026', detalle:'Depositado en Sapucai', monto:600000 }
+      ],
+      cierres: [
+        { fecha:'02/02/2026', detalle:'Cierre del día', monto:125000 },
+        { fecha:'04/02/2026', detalle:'Cierre del día', monto:20000 },
+        { fecha:'05/02/2026', detalle:'Cierre del día', monto:258000 },
+        { fecha:'06/02/2026', detalle:'Cierre del día', monto:95000 },
+        { fecha:'07/02/2026', detalle:'Cierre del día', monto:75000 },
+        { fecha:'09/02/2026', detalle:'Cierre del día', monto:68000 },
+        { fecha:'10/02/2026', detalle:'Cierre del día', monto:358000 },
+        { fecha:'11/02/2026', detalle:'Cierre del día', monto:308000 },
+        { fecha:'12/02/2026', detalle:'Cierre del día', monto:90000 },
+        { fecha:'13/02/2026', detalle:'Cierre del día', monto:61000 },
+        { fecha:'14/02/2026', detalle:'Cierre del día', monto:191000 },
+        { fecha:'16/02/2026', detalle:'Cierre del día', monto:105500 },
+        { fecha:'17/02/2026', detalle:'Cierre del día', monto:450500 },
+        { fecha:'18/02/2026', detalle:'Cierre del día', monto:180500 },
+        { fecha:'19/02/2026', detalle:'Cierre del día', monto:282500 },
+        { fecha:'20/02/2026', detalle:'Cierre del día', monto:42500 },
+        { fecha:'21/02/2026', detalle:'Cierre del día', monto:212500 },
+        { fecha:'23/02/2026', detalle:'Cierre del día', monto:57500 },
+        { fecha:'24/02/2026', detalle:'Cierre del día', monto:177500 },
+        { fecha:'25/02/2026', detalle:'Cierre del día', monto:18500 },
+        { fecha:'26/02/2026', detalle:'Cierre del día', monto:291500 },
+        { fecha:'27/02/2026', detalle:'Cierre del día', monto:81500 },
+        { fecha:'28/02/2026', detalle:'Cierre del día', monto:335500 }
+      ],
+      combustibleMovimientos: [
+        { fecha:'02/02/2026', detalle:'Carga de combustible', monto:100000 },
+        { fecha:'04/02/2026', detalle:'Carga de combustible', monto:200000 },
+        { fecha:'16/02/2026', detalle:'Carga de combustible', monto:100000 },
+        { fecha:'18/02/2026', detalle:'Carga de combustible', monto:150000 },
+        { fecha:'19/02/2026', detalle:'Carga de combustible', monto:100000 },
+        { fecha:'24/02/2026', detalle:'Carga de combustible', monto:150000 },
+        { fecha:'26/02/2026', detalle:'Carga de combustible', monto:150000 }
+      ]
+    };
+
+    const gs = (n) => 'Gs. ' + (n || 0).toLocaleString('es-ES');
+    const totalCierres = datos.cierres.reduce((a,x)=>a+x.monto,0);
+    const totalCombustible = datos.combustibleMovimientos.reduce((a,x)=>a+x.monto,0);
+    const saldoOperativo = datos.ingresos - datos.egresos;
+
+    document.getElementById('tIngresos').textContent = gs(datos.ingresos);
+    document.getElementById('tEgresos').textContent = gs(datos.egresos);
+    document.getElementById('tCombustible').textContent = gs(totalCombustible);
+    document.getElementById('tSapucai').textContent = gs(datos.sapucai);
+    document.getElementById('tCierre').textContent = gs(totalCierres);
+    document.getElementById('tSaldo').textContent = gs(saldoOperativo);
+    document.getElementById('sumSap').textContent = 'Total: ' + gs(datos.sapucai);
+    document.getElementById('sumCie').textContent = 'Total: ' + gs(totalCierres);
+    document.getElementById('sumComb').textContent = 'Total: ' + gs(totalCombustible);
+
+    document.getElementById('tbResumen').innerHTML = [
+      ['Ingresos', datos.ingresos],
+      ['Egresos', datos.egresos],
+      ['Combustible', totalCombustible],
+      ['Sapucai', datos.sapucai],
+      ['Cierre acumulado', totalCierres],
+      ['Saldo operativo', saldoOperativo]
+    ].map(([k,v]) => `<tr><td><b>${k}</b></td><td>${gs(v)}</td></tr>`).join('');
+
+    document.getElementById('tbSapucai').innerHTML = datos.sapucaiMovimientos.map(x => `
+      <tr>
+        <td>${x.fecha}</td>
+        <td>${x.detalle}</td>
+        <td>${gs(x.monto)}</td>
+      </tr>
+    `).join('');
+
+    document.getElementById('tbCierres').innerHTML = datos.cierres.map(x => `
+      <tr>
+        <td>${x.fecha}</td>
+        <td>${x.detalle}</td>
+        <td>${gs(x.monto)}</td>
+      </tr>
+    `).join('');
+
+    document.getElementById('tbCombustible').innerHTML = datos.combustibleMovimientos.map(x => `
+      <tr>
+        <td>${x.fecha}</td>
+        <td>${x.detalle}</td>
+        <td>${gs(x.monto)}</td>
+      </tr>
+    `).join('');
+
+    document.getElementById('btnCopiar').addEventListener('click', async () => {
+      const txt = `${datos.periodo}\nIngresos: ${gs(datos.ingresos)}\nEgresos: ${gs(datos.egresos)}\nCombustible: ${gs(totalCombustible)}\nSapucai: ${gs(datos.sapucai)}\nCierre: ${gs(totalCierres)}\nSaldo operativo: ${gs(saldoOperativo)}`;
+      try {
+        await navigator.clipboard.writeText(txt);
+        alert('Resumen copiado ✅');
+      } catch(e) {
+        alert('No se pudo copiar.');
+      }
+    });
+
+    document.getElementById('marcaTiempo').textContent = 'Generado: ' + new Date().toLocaleString('es-ES');
+
+    new Chart(document.getElementById('chartResumen'), {
+      type: 'bar',
+      data: {
+        labels: ['Ingresos', 'Egresos', 'Combustible', 'Sapucai', 'Cierre', 'Saldo'],
+        datasets: [{
+          data: [datos.ingresos, datos.egresos, totalCombustible, datos.sapucai, totalCierres, saldoOperativo],
+          backgroundColor: ['#1e88e5','#f9a825','#e53935','#43a047','#6a1b9a','#00897b'],
+          borderRadius: 8,
+          barThickness: 32,
+          maxBarThickness: 36
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display:false }, tooltip: { callbacks: { label: (ctx) => gs(ctx.raw) } } },
+        layout: { padding: { left: 20, right: 20, top: 6, bottom: 0 } },
+        scales: {
+          x: { grid: { display:false } },
+          y: { beginAtZero:true, ticks: { callback: (value) => 'Gs. ' + Number(value).toLocaleString('es-ES') } }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('chartDistribucion'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Egresos', 'Combustible', 'Sapucai', 'Cierre'],
+        datasets: [{
+          data: [datos.egresos, totalCombustible, datos.sapucai, totalCierres],
+          backgroundColor: ['#f9a825','#e53935','#43a047','#6a1b9a'],
+          borderColor: '#ffffff',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position:'bottom', labels:{ padding:12, boxWidth:12, font:{ size:11 } } },
+          tooltip: { callbacks: { label: (ctx) => `${ctx.label}: ${gs(ctx.raw)}` } }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('chartCierres'), {
+      type: 'bar',
+      data: {
+        labels: datos.cierres.map(x => x.fecha.slice(0,5)),
+        datasets: [{
+          data: datos.cierres.map(x => x.monto),
+          backgroundColor: '#6a1b9a',
+          borderRadius: 7,
+          barThickness: 14,
+          maxBarThickness: 16
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend:{display:false}, tooltip:{callbacks:{label:(ctx)=>gs(ctx.raw)}} },
+        scales: {
+          x: { grid:{display:false} },
+          y: { beginAtZero:true, ticks:{ callback:(value)=>'Gs. ' + Number(value).toLocaleString('es-ES') } }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('chartCombustible'), {
+      type: 'bar',
+      data: {
+        labels: datos.combustibleMovimientos.map(x => x.fecha.slice(0,5)),
+        datasets: [{
+          data: datos.combustibleMovimientos.map(x => x.monto),
+          backgroundColor: '#e53935',
+          borderRadius: 7,
+          barThickness: 20,
+          maxBarThickness: 24
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend:{display:false}, tooltip:{callbacks:{label:(ctx)=>gs(ctx.raw)}} },
+        scales: {
+          x: { grid:{display:false} },
+          y: { beginAtZero:true, ticks:{ callback:(value)=>'Gs. ' + Number(value).toLocaleString('es-ES') } }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

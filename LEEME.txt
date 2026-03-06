@@ -1,0 +1,5 @@
+Archivo incluido:
+- index.html
+
+Abrí index.html en tu navegador.
+Desde ahí podés imprimir o guardar en PDF.
